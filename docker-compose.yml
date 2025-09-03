@@ -1,0 +1,16 @@
+services:
+  backend:
+    build:
+      context: .
+    environment:
+      PORT: 80
+      NODE_ENV: prod
+    ports:
+      - "80:80"
+    depends_on:
+      - redis
+
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
