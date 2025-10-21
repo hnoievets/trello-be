@@ -9,9 +9,7 @@ export function Trim(): PropertyDecorator {
     }
 
     if (Array.isArray(value)) {
-      result = value.map(
-        (item) => typeof value === 'string' ? item.trim() : value
-      );
+      result = value.map((item) => (typeof value === 'string' ? item.trim() : value));
     }
 
     return result;

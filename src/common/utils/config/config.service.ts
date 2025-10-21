@@ -4,9 +4,7 @@ import { Injectable, Inject } from '@nestjs/common';
 export class ConfigService {
   private readonly envConfig: any;
 
-  constructor(
-    @Inject('CONFIG') private config: any
-  ) {
+  constructor(@Inject('CONFIG') private config: any) {
     this.envConfig = config;
   }
 

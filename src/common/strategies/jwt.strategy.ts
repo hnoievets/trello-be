@@ -20,8 +20,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
   authenticate(request: any) {
     const token =
-      request.headers['authorization'] &&
-      request.headers['authorization'].split(' ')[1];
+      request.headers['authorization'] && request.headers['authorization'].split(' ')[1];
 
     this.sessionsService.findSession(token).then((user) => this.success(user));
   }

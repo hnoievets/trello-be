@@ -5,12 +5,13 @@ import {
   DataType,
   Default,
   AllowNull,
-  ForeignKey, Scopes,
+  ForeignKey,
+  Scopes,
 } from 'sequelize-typescript';
 import { User } from 'src/users/entities';
 
 @Scopes(() => ({
-  byToken: (token: string) => ({ where: { token } })
+  byToken: (token: string) => ({ where: { token } }),
 }))
 @Table({
   tableName: 'verificationTokens',

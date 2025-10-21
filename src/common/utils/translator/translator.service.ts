@@ -77,9 +77,7 @@ export class TranslatorService {
       this.translations[lang] = {};
 
       try {
-        const files = fs
-          .readdirSync(langPath)
-          .filter((file) => file.endsWith('.json'));
+        const files = fs.readdirSync(langPath).filter((file) => file.endsWith('.json'));
 
         for (const file of files) {
           try {
@@ -98,9 +96,7 @@ export class TranslatorService {
           }
         }
       } catch (error) {
-        console.error(
-          `Error loading translations for "${lang}": ${error.message}`,
-        );
+        console.error(`Error loading translations for "${lang}": ${error.message}`);
         this.translations[lang] = {};
       }
     }

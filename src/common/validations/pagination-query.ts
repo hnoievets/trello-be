@@ -6,7 +6,7 @@ export class PaginationQuery {
   @ApiProperty({
     type: Number,
     required: false,
-    default: 0
+    default: 0,
   })
   @Type(() => Number)
   @IsOptional()

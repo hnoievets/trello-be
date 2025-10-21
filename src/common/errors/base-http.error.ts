@@ -8,7 +8,7 @@ export class BaseHttpError extends HttpException {
         errorCode: message,
         statusCode,
       },
-      statusCode
+      statusCode,
     );
   }
 }

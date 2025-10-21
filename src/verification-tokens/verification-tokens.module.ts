@@ -11,12 +11,7 @@ import { entities } from '../common/utils/database/entities';
 @Module({
   imports: [SequelizeModule.forFeature(entities), SessionsModule],
   controllers: [VerificationTokensController],
-  providers: [
-    VerificationTokensService,
-    UsersService,
-    JwtStrategy,
-    ...guardProviders
-  ],
+  providers: [VerificationTokensService, UsersService, JwtStrategy, ...guardProviders],
   exports: [VerificationTokensService],
 })
 export class VerificationTokensModule {}

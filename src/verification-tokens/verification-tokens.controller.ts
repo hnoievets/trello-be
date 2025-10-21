@@ -40,7 +40,7 @@ export class VerificationTokensController {
     }
 
     const tokenModel = await this.verificationTokensService.getOne([
-      { method: ['byToken', token] }
+      { method: ['byToken', token] },
     ]);
 
     if (!tokenModel) {
@@ -55,7 +55,7 @@ export class VerificationTokensController {
       throw new UnauthorizedException('TOKEN_USED');
     }
 
-    await this.sequelize.transaction(transaction =>
+    await this.sequelize.transaction((transaction) =>
       Promise.all([
         this.usersService.updateById(userId, { isVerified: true }, transaction),
         tokenModel.update({ isUsed: true }, { transaction }),

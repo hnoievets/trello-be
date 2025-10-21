@@ -6,6 +6,7 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { SessionsModule } from '../sessions/sessions.module';
 import { JwtStrategy } from '../common/strategies/jwt.strategy';
 import { MailerModule } from '../mailer/mailer.module';
+// eslint-disable-next-line max-len
 import { VerificationTokensModule } from '../verification-tokens/verification-tokens.module';
 import { entities } from '../common/utils/database/entities';
 import { FilesModule } from '../files/files.module';

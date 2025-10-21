@@ -76,9 +76,7 @@ export class SessionsController {
   @ApiOperation({ summary: 'Refresh session' })
   @Put()
   async refresh(@Body() body: RefreshSessionDto): Promise<SessionDto> {
-    const oldSessionParams = this.sessionsService.verifyToken(
-      body.refreshToken,
-    );
+    const oldSessionParams = this.sessionsService.verifyToken(body.refreshToken);
 
     const user = await this.usersService.getById(oldSessionParams.data.userId);
 
