@@ -15,11 +15,10 @@ jobs:
         uses: actions/cache@v4
         id: cache-primes
         with:
-          path: node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
 
       - name: Install dependencies
-        if: steps.cache-primes.outputs.cache-hit != 'true'
         run: npm ci
 
       - name: Build
