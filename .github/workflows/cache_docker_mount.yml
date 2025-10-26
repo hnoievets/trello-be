@@ -29,7 +29,6 @@ jobs:
             {
               "cache-mount": "/root/.npm"
             }
-          skip-extraction: ${{ steps.cache-mount.outputs.cache-hit }}
 
       - name: Build Docker image
         uses: docker/build-push-action@v6
