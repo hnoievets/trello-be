@@ -18,8 +18,7 @@ jobs:
         id: cache-mount
         with:
           path: cache-mount
-          key: cache-mount-${{ hashFiles('package-lock.json') }}
-          restore-keys: cache-mount-
+          key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
 
       - name: Restore Docker cache mounts
         uses: reproducible-containers/buildkit-cache-dance@v3
