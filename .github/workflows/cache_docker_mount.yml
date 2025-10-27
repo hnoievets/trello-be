@@ -14,8 +14,13 @@ jobs:
         uses: docker/setup-buildx-action@v3
         id: setup-buildx
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Cache
+        uses: actions/cache@v4
+        id: cache-mount
+        with:
+          path: cache-mount
+          key: cache-mount-${{ hashFiles('package-lock.json') }}
+          restore-keys: cache-mount-
 
       - name: Restore Docker cache mounts
         uses: reproducible-containers/buildkit-cache-dance@v3
@@ -23,9 +28,9 @@ jobs:
           builder: ${{ steps.setup-buildx.outputs.name }}
           cache-map: |
             {
-              "~/.npm": "/root/.npm"
+              "cache-mount": "/root/.npm"
             }
-          skip-extraction: true
+          skip-extraction: ${{ steps.cache-mount.outputs.cache-hit }}
 
       - name: Build Docker image
         uses: docker/build-push-action@v6
