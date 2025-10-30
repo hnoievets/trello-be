@@ -1,5 +1,5 @@
 # базовий образ
-FROM node:22
+FROM node:22-alpine
 
 # визначення робочої папки
 WORKDIR /app
