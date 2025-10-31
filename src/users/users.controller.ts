@@ -37,6 +37,7 @@ export class UsersController {
   @ApiOperation({ summary: 'Get current user`s profile' })
   @Get('me')
   async getMyProfile(@Req() req: AuthRequest): Promise<UserDto> {
+    // comment to delete
     const user = await this.usersService.getProfile(req.user.userId);
 
     return new UserDto(user);
