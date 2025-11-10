@@ -24,7 +24,7 @@ WORKDIR /app
 
 # завантаження залежностей
 COPY package*.json ./
-RUN npm ci
+RUN --mount=type=cache,target=/root/.npm npm ci
 
 # збірка застосунку
 COPY . .
@@ -37,10 +37,10 @@ FROM node:22-alpine AS production
 # визначення робочої папки
 WORKDIR /app
 
-# копіювання файлів залежностей з минулого етапу
+# копіювання файлів залежностей
 # завантаженя залежностей (без інстременів розробки)
 COPY package*.json ./
-RUN npm ci --omit=dev
+RUN --mount=type=cache,target=/root/.npm npm ci --omit=dev
 
 # копіювання зібраного додатку з минулого етапу
 COPY --from=builder /app/dist ./dist
