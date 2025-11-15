@@ -1,33 +1,56 @@
-name: cached NPM dependencies CI
+# назва конвеєру
+name: cache CI
+
+# виконується при таких подіях:
 on:
+  # додавання змін у гілку main
   push:
     branches: [ main ]
+  # запит на додавання змін у гілку main
+  pull_request:
+    branches: [ main ]
+
+# перелік робіт
 jobs:
+  # назва роботи
   build:
+    # Використовується хмарне середовище GitHub з останнім образом Ubuntu
     runs-on: ubuntu-latest
     steps:
+      # Клонування репозиторію у середовище
       - uses: actions/checkout@v5
+
+      # Встановлення Node.js
       - uses: actions/setup-node@v6
         with:
           node-version-file: '.nvmrc'
 
-      - name: Cache NPM dependencies
+      # Кешування
+      - name: Cache NPM cache files
         uses: actions/cache@v4
-        id: cache-primes
         with:
+          # Шлях до цільової папки
           path: ~/.npm
+          # Назва кешу
           key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
+          # Ключ відновлення
           restore-keys: ${{ runner.os }}-npm-
 
+      # Встановлення залежностей
       - name: Install dependencies
         run: npm ci
 
-      - name: Build
-        run: npm run build
+      # Перевірка стилю коду
+      - name: Code linting
+        run: npm run lint
 
+      # Крок 2: будування Docker-образу
       - name: Build Docker image
         uses: docker/build-push-action@v6
         with:
+          # Контекст збірки – поточна директорія
           context: .
+          # Образ не завантажується у реєстр
           push: false
+          # Тег для образу
           tags: trello-be:latest
