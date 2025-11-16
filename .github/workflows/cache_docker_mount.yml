@@ -37,6 +37,17 @@ jobs:
           # Ключ відновлення
           restore-keys: ${{ runner.os }}-npm-
 
+      - name: Cache NPM cache files 2
+        uses: actions/cache@v4
+        id: cache
+        with:
+          # Шлях до цільової папки
+          path: cache
+          # Назва кешу
+          key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
+          # Ключ відновлення
+          restore-keys: ${{ runner.os }}-npm-
+
       # Встановлення залежностей
       - name: Install dependencies
         run: npm ci
@@ -59,10 +70,10 @@ jobs:
           # Копіювання з ~/.npm до /root/.npm
           cache-map: |
             {
-              "~/.npm": "/root/.npm"
+              "cache": "/root/.npm"
             }
           # Пропускається вивантаження з Docker, якщо кеш валідний
-          skip-extraction: ${{ steps.npm-cache.outputs.cache-hit }}
+          skip-extraction: ${{ steps.cache.outputs.cache-hit }}
 
       # Будування Docker-образу
       - name: Build Docker image
