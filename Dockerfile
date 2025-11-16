@@ -1,20 +1,3 @@
-## базовий образ
-#FROM node:22-alpine
-#
-## визначення робочої папки
-#WORKDIR /app
-#
-## завантаження залежностей
-#COPY package*.json ./
-#RUN npm ci
-#
-## збірка застосунку
-#COPY . .
-#RUN npm run build
-#
-## запуск прогарми
-#CMD ["npm", "run", "start:prod"]
-
 # Етап 1: будування
 # базовий образ
 FROM node:22-alpine AS builder
