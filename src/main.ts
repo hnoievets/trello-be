@@ -10,6 +10,9 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
 
   console.log('Hello world!');
+  console.log('Hello world!');
+  console.log('Hello world!');
+  console.log('Hello world!');
 
   await setupSwagger(app, configService);
 
