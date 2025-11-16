@@ -9,6 +9,9 @@ async function bootstrap() {
 
   const configService = app.get(ConfigService);
 
+  // code to delete
+  console.log('Code changes');
+
   await setupSwagger(app, configService);
 
   await appBuilder(app, configService);
