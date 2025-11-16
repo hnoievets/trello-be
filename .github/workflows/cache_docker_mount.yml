@@ -50,17 +50,17 @@ jobs:
         uses: docker/setup-buildx-action@v3
         id: setup-buildx
 
-      # Монтування кешу у Docker
-      - name: Restore Docker cache mounts
-        uses: reproducible-containers/buildkit-cache-dance@v3
-        with:
-          # Передавання назви будувальника
-          builder: ${{ steps.setup-buildx.outputs.name }}
-          # Копіювання з ~/.npm до /root/.npm
-          cache-map: |
-            {
-              "/home/runner/.npm": "/root/.npm"
-            }
+#      # Монтування кешу у Docker
+#      - name: Restore Docker cache mounts
+#        uses: reproducible-containers/buildkit-cache-dance@v3
+#        with:
+#          # Передавання назви будувальника
+#          builder: ${{ steps.setup-buildx.outputs.name }}
+#          # Копіювання з ~/.npm до /root/.npm
+#          cache-map: |
+#            {
+#              "/home/runner/.npm": "/root/.npm"
+#            }
 
       # Будування Docker-образу
       - name: Build Docker image
