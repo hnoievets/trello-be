@@ -7,7 +7,7 @@ WORKDIR /app
 
 # завантаження залежностей
 COPY package*.json ./
-RUN --mount=type=cache,target=/root/.npm npm ci
+RUN npm ci
 
 # збірка застосунку
 COPY . .
@@ -23,7 +23,7 @@ WORKDIR /app
 # копіювання файлів залежностей
 # завантаженя залежностей (без інстременів розробки)
 COPY package*.json ./
-RUN --mount=type=cache,target=/root/.npm npm ci --omit=dev
+RUN npm ci --omit=dev
 
 # копіювання зібраного додатку з минулого етапу
 COPY --from=builder /app/dist ./dist
