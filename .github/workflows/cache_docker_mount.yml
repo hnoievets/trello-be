@@ -72,8 +72,6 @@ jobs:
             {
               "cache": "/root/.npm"
             }
-          # Пропускається вивантаження з Docker, якщо кеш валідний
-          skip-extraction: ${{ steps.cache.outputs.cache-hit }}
 
       # Будування Docker-образу
       - name: Build Docker image
@@ -85,7 +83,7 @@ jobs:
           push: false
           # Тег для образу
           tags: trello-be:latest
-          # Пошук в GitHub Actions Cache
-          cache-from: type=gha
-          # Збереження в GitHub Actions Cache, кешування усіх рівнів
-          cache-to: type=gha,mode=max
+#          # Пошук в GitHub Actions Cache
+#          cache-from: type=gha
+#          # Збереження в GitHub Actions Cache, кешування усіх рівнів
+#          cache-to: type=gha,mode=max
