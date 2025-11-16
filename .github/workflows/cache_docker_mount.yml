@@ -56,11 +56,6 @@ jobs:
         with:
           # Передавання назви будувальника
           builder: ${{ steps.setup-buildx.outputs.name }}
-          # Копіювання з ~/.npm до /root/.npm
-          cache-map: |
-            {
-              "~/.npm": "/root/.npm"
-            }
 
       # Будування Docker-образу
       - name: Build Docker image
