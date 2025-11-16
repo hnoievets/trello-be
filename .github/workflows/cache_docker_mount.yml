@@ -48,6 +48,7 @@ jobs:
       # Встановлення розширення Buildx для роботи з кешем
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+        id: setup-buildx
 
       # Монтування кешу у Docker
       - name: Restore Docker cache mounts
