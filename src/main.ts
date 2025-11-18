@@ -13,6 +13,10 @@ async function bootstrap() {
   console.log('Hello world!');
   console.log('Hello world!');
   console.log('Hello world!');
+  console.log('Hello world!');
+  console.log('Hello world!');
+  console.log('Hello world!');
+  console.log('Hello world!');
 
   await setupSwagger(app, configService);
 

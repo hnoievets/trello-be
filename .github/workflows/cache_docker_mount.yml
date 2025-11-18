@@ -61,6 +61,7 @@ jobs:
             {
               "/home/runner/.npm": "/root/.npm"
             }
+          # Умова для пропуску витягування кешу з Docker - валідний кеш
           skip-extraction: ${{ steps.npm-cache.outputs.cache-hit }}
 
       # Будування Docker-образу
