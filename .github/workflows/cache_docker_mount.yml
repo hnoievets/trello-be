@@ -28,7 +28,6 @@ jobs:
       # Кешування
       - name: Cache NPM cache files
         uses: actions/cache@v4
-        id: npm-cache
         with:
           # Шлях до цільової папки
           path: ~/.npm
@@ -61,8 +60,8 @@ jobs:
             {
               "/home/runner/.npm": "/root/.npm"
             }
-          # Умова для пропуску витягування кешу з Docker - валідний кеш
-          skip-extraction: ${{ steps.npm-cache.outputs.cache-hit }}
+          # Пропуску витягування монтованної папки з Docker
+          skip-extraction: true
 
       # Будування Docker-образу
       - name: Build Docker image
