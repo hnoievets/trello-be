@@ -5,6 +5,7 @@ on:
   # додавання змін у гілку main
   push:
     branches: [ main ]
+  workflow_dispatch:
 
 # перелік робіт
 jobs:
