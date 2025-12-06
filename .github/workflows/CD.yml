@@ -29,7 +29,7 @@ jobs:
           # Ключ відновлення
           restore-keys: ${{ runner.os }}-npm-
 
-      - run: echo '${{env.TEST}}'
+      - run: echo '${{vars.TEST}}'
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
