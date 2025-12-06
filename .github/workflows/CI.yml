@@ -40,11 +40,15 @@ jobs:
       - name: Code linting
         run: npm run lint
 
+      # Встановлення розширення Buildx для роботи з кешем
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
       # Монтування кешу у Docker
       - name: Restore Docker cache mounts
         uses: reproducible-containers/buildkit-cache-dance@v3
         with:
-          # Передавання назви будувальника
+          # Передавання назви рушію
           builder: ${{ steps.setup-buildx.outputs.name }}
           # Копіювання з ~/.npm до /root/.npm
           cache-map: |
