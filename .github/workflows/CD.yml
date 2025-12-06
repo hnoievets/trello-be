@@ -1,0 +1,85 @@
+name: CD.yml
+
+# виконується при таких подіях:
+on:
+  # додавання змін у гілку main
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+# перелік робіт
+jobs:
+  # назва роботи
+  deploy:
+    # Використовується хмарне середовище GitHub з останнім образом Ubuntu
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
+      # Клонування репозиторію у середовище
+      - uses: actions/checkout@v5
+
+      # Кешування
+      - name: Cache NPM cache files
+        uses: actions/cache@v4
+        with:
+          # Шлях до цільової папки
+          path: npm_cache
+          # Назва кешу
+          key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
+          # Ключ відновлення
+          restore-keys: ${{ runner.os }}-npm-
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      # Встановлення розширення Buildx для роботи з кешем
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        id: setup-buildx
+
+      # Кешування
+      - name: Cache NPM cache files
+        uses: actions/cache@v4
+        with:
+          # Шлях до цільової папки
+          path: npm_cache
+          # Назва кешу
+          key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
+          # Ключ відновлення
+          restore-keys: ${{ runner.os }}-npm-
+
+      # Монтування кешу у Docker
+      - name: Restore Docker cache mounts
+        uses: reproducible-containers/buildkit-cache-dance@v3
+        with:
+          # Передавання назви будувальника
+          builder: ${{ steps.setup-buildx.outputs.name }}
+          # Копіювання з npm_cache до /root/.npm
+          cache-map: |
+            {
+              "npm_cache": "/root/.npm"
+            }
+          # Пропуску витягування монтованної папки з Docker
+          skip-extraction: ${{ steps.cache.outputs.cache-hit }}
+
+      # Будування Docker-образу
+      - name: Build Docker image
+        uses: docker/build-push-action@v6
+        with:
+          # Контекст збірки – поточна директорія
+          context: .
+          # Образ завантажується у реєстр ECR
+          push: true
+          # Тег для образу
+          tags: ${{ secrets.AWS_ACCOUNT }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/trello-be:latest
+          # Пошук в GitHub Actions Cache
+          cache-from: type=gha
+          # Збереження в GitHub Actions Cache, кешування усіх рівнів
+          cache-to: type=gha,mode=max
