@@ -55,7 +55,7 @@ jobs:
       mysql:
         image: mysql:8
         env:
-          MYSQL_ROOT_PASSWORD: 'root'
+          MYSQL_ROOT_PASSWORD: 'password'
           MYSQL_DATABASE: 'trello'
         ports:
           - 3306:3306
