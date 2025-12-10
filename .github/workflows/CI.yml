@@ -121,4 +121,4 @@ jobs:
 
       # Запуск тестів по шардах з паралелізаціє на 4 воркери
       - name: Run tests shards
-        run: npx jest --config ./test/jest-e2e.json --shard=${{matrix.shard}}/2 --maxWorkers=4 --ci
+        run: npx jest --config ./test/jest-e2e.json --shard=${{matrix.shard}}/2
