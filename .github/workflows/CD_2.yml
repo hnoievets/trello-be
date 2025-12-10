@@ -1,0 +1,41 @@
+name: CD_2.yml
+
+# виконується при таких подіях:
+on:
+  # додавання змін у гілку main
+  workflow_dispatch:
+
+# перелік робіт
+jobs:
+  # назва роботи
+  deploy:
+    # Використовується хмарне середовище GitHub з останнім образом Ubuntu
+    runs-on: ubuntu-latest
+    # Визначення оточення для доступу до змінних та секретів
+    environment: dev
+    steps:
+      # Клонування репозиторію у середовище
+      - uses: actions/checkout@v5
+
+      # Конфігурація AWS CLI
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_KEY_SECRET }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      # Автентифікація Amazon ECR
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      # Будування Docker-образу
+      - name: Build Docker image
+        uses: docker/build-push-action@v6
+        with:
+          # Контекст збірки – поточна директорія
+          context: .
+          # Образ завантажується у реєстр ECR
+          push: true
+          # Тег для образу
+          tags: ${{ secrets.AWS_ACCOUNT }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/trello-be:latest
