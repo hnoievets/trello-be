@@ -10,7 +10,6 @@ on:
 jobs:
   # назва роботи
   build:
-    environment: dev
     # Використовується хмарне середовище GitHub з останнім образом Ubuntu
     runs-on: ubuntu-latest
     steps:
@@ -44,6 +43,7 @@ jobs:
   test:
     # Використовується хмарне середовище GitHub з останнім образом Ubuntu
     runs-on: ubuntu-latest
+    environment: dev
     strategy:
       # не зупиняти матрицю якщо один з елементів провалився
       fail-fast: true
