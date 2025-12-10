@@ -13,6 +13,7 @@ jobs:
   deploy:
     # Використовується хмарне середовище GitHub з останнім образом Ubuntu
     runs-on: ubuntu-latest
+    # Визначення оточення для доступу до змінних та секретів
     environment: dev
     steps:
       # Клонування репозиторію у середовище
@@ -29,6 +30,7 @@ jobs:
           # Ключ відновлення
           restore-keys: ${{ runner.os }}-npm-
 
+      # Конфігурація AWS CLI
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -36,6 +38,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_KEY_SECRET }}
           aws-region: ${{ secrets.AWS_REGION }}
 
+      # Автентифікація Amazon ECR
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v2
 

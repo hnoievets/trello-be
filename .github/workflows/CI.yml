@@ -10,6 +10,7 @@ on:
 jobs:
   # назва роботи
   build:
+    environment: dev
     # Використовується хмарне середовище GitHub з останнім образом Ubuntu
     runs-on: ubuntu-latest
     steps:
@@ -40,35 +41,81 @@ jobs:
       - name: Code linting
         run: npm run lint
 
-      # Встановлення розширення Buildx для роботи з кешем
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+  test:
+    # Використовується хмарне середовище GitHub з останнім образом Ubuntu
+    runs-on: ubuntu-latest
+    strategy:
+      # не зупиняти матрицю якщо один з елементів провалився
+      fail-fast: true
+      # об'явлення шардів
+      matrix:
+        shard: [ 1, 2 ]
 
-      # Монтування кешу у Docker
-      - name: Restore Docker cache mounts
-        uses: reproducible-containers/buildkit-cache-dance@v3
-        with:
-          # Передавання назви рушію
-          builder: ${{ steps.setup-buildx.outputs.name }}
-          # Копіювання з ~/.npm до /root/.npm
-          cache-map: |
-            {
-              "/home/runner/.npm": "/root/.npm"
-            }
-          # Пропуску витягування монтованної папки з Docker
-          skip-extraction: ${{ steps.cache.outputs.cache-hit }}
+    services:
+      mysql:
+        image: mysql:8
+        env:
+          MYSQL_ROOT_PASSWORD: 'root'
+          MYSQL_DATABASE: 'trello'
+        ports:
+          - 3306:3306
+      redis:
+        image: redis:alpine
+        ports:
+          - 6379:6379
 
-      # Будування Docker-образу
-      - name: Build Docker image
-        uses: docker/build-push-action@v6
+    env:
+      SWAGGER_BACKEND_URL: 'http://localhost:3000'
+      SWAGGER_TITLE: 'Trello'
+      FALLBACK_LANGUAGE: 'en'
+      DB_DIALECT: 'mysql'
+      DB_HOST: 'localhost'
+      DB_PORT: '3306'
+      DB_USER: 'root'
+      DB_PASSWORD: 'password'
+      DB_NAME: 'trello'
+      JWT_SECRET: 'secret'
+      JWT_EXPIRES_IN: 43200000
+      REDIS_HOST: 'localhost'
+      REDIS_PORT: 6379
+      REDIS_DB: ''
+      REDIS_PASSWORD: ''
+      REDIS_PREFIX: 'prefix_'
+      CORS_ORIGINS: '["http://localhost:5173"]'
+      FRONTEND_URL: 'http://localhost:5173'
+      AWS_SES_REGION: 'us-east-1'
+      AWS_SES_ACCESS_KEY: ${{secrets.AWS_SES_ACCESS_KEY}}
+      AWS_SES_KEY_SECRET: ${{secrets.AWS_SES_KEY_SECRET}}
+      AWS_SES_FROM_MAIL: 'oleh.hnoievets@cleveroad.com'
+      AWS_S3_REGION: 'eu-central-1'
+      AWS_S3_KEY_SECRET: ${{secrets.AWS_S3_KEY_SECRET}}
+      AWS_S3_ACCESS_KEY: ${{secrets.AWS_S3_ACCESS_KEY}}
+      AWS_S3_URL_EXPIRES_IN_SEC: 1800
+      AWS_S3_BUCKET_NAME: 'trello-bucket-frankfurt'
+
+    steps:
+      # Клонування репозиторію у середовище
+      - uses: actions/checkout@v5
+      # Встановлення Node.js
+      - uses: actions/setup-node@v6
         with:
-          # Контекст збірки – поточна директорія
-          context: .
-          # Образ не завантажується у реєстр
-          push: false
-          # Тег для образу
-          tags: trello-be:latest
-          # Пошук в GitHub Actions Cache
-          cache-from: type=gha
-          # Збереження в GitHub Actions Cache, кешування усіх рівнів
-          cache-to: type=gha,mode=max
+          node-version-file: '.nvmrc'
+
+      # Кешування
+      - name: Cache NPM cache files
+        uses: actions/cache@v4
+        with:
+          # Шлях до цільової папки
+          path: ~/.npm
+          # Назва кешу
+          key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
+          # Ключ відновлення
+          restore-keys: ${{ runner.os }}-npm-
+
+      # Встановлення залежностей
+      - name: Install dependencies
+        run: npm ci
+
+      # Запуск тестів по шардах з паралелізаціє на 4 воркери
+      - name: Run tests shards
+        run: npm run test:e2e --shard=${{matrix.shard}}/2 --maxWorkers=4 --slient
