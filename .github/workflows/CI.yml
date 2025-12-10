@@ -116,6 +116,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: DB migrations
+        run: npm run migrate
+
       # Запуск тестів по шардах з паралелізаціє на 4 воркери
       - name: Run tests shards
         run: npm run test:e2e --shard=${{matrix.shard}}/2 --maxWorkers=4 --slient
