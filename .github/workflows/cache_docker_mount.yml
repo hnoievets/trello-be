@@ -74,6 +74,7 @@ jobs:
           push: false
           # Тег для образу
           tags: trello-be:latest
-
-      - name: Check images
-        run: docker images
+          # Пошук в GitHub Actions Cache
+          cache-from: type=gha
+          # Збереження в GitHub Actions Cache, кешування усіх рівнів
+          cache-to: type=gha,mode=max
