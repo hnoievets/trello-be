@@ -37,8 +37,9 @@ Backend API for a Kanban-style project management tool with authentication, real
 * [Redis](https://redis.io/) - Temporary storage
 * [Swagger](https://swagger.io) - API documentation
 * [Socket.IO](https://socket.io/docs/v4) - WebSocket features
-* [Docker](https://www.docker.com/) - open platform for developing, shipping, and running applications
+* [Docker](https://www.docker.com/) - Containerizatoin
 * AWS (SES, S3),
+
 
 ## Project setup
 
@@ -62,3 +63,13 @@ $ npm run start:dev
 # production mode
 $ npm run start:prod
 ```
+
+## CI/CD
+
+1. GitHub Actions
+2. AWS Elastic Container Registry
+3. AWS AppRunner
+
+## Infrastructure
+<img width="650" height="500" alt="image" src="https://github.com/user-attachments/assets/4a58b61a-bf6b-496d-ace5-81dab0b07f75" />
+
